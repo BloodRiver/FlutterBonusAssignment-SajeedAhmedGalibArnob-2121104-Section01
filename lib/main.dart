@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui_class/providers/task_management_provider.dart';
 import 'package:flutter_ui_class/screens/UI_page.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const FlutterUIApp());
@@ -10,19 +12,25 @@ class FlutterUIApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_)=> TaskManagementProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
+        home: const HomePage(title: 'FLUTTER UI DEMO'),
       ),
-      home: const HomePage(title: 'FLUTTER UI DEMO'),
     );
   }
 }
 
 
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatefulWidget { 
   final String title;
 
   const HomePage({super.key, required this.title});

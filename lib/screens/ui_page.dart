@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_class/data/dummy_data.dart';
 import 'package:flutter_ui_class/models/card_data_model.dart';
+import 'package:flutter_ui_class/providers/task_management_provider.dart';
 import 'package:flutter_ui_class/screens/add_task_page.dart';
 import 'package:flutter_ui_class/widgets/task_card_widget.dart';
+import 'package:provider/provider.dart';
 
 class UiPage extends StatefulWidget {
   const UiPage({super.key});
@@ -14,7 +16,8 @@ class UiPage extends StatefulWidget {
 class _UiPageState extends State<UiPage> {
 
 
-  DummyData dummyData = DummyData();
+  
+  DummyData dummyDataInstance = DummyData();
 
 
   @override
@@ -28,24 +31,33 @@ class _UiPageState extends State<UiPage> {
         backgroundColor: Colors.purpleAccent,
       ),
 
-      body: ListView.builder(
-        padding: EdgeInsets.all(16),
-        itemCount: dummyData.tasks.length,
-        itemBuilder: (context, index) {
-          final task = dummyData.tasks[index];
-
-          return TaskCardWidget(
-            title: task.title,
-            subtitle: task.subtitle,
-            icon: task.icon,
+      body: Consumer<TaskManagementProvider>(
+        builder: (context, taskProvider, _) {
+          return RefreshIndicator(
+              onRefresh: () async {
+                setState(() {});
+              },
+            child: ListView.builder(
+              padding: EdgeInsets.all(16),
+              itemCount: taskProvider.tasks.length,
+              itemBuilder: (context, index) {
+                final task = taskProvider.tasks[index];
+            
+                return TaskCardWidget(
+                  title: task.title,
+                  subtitle: task.subtitle,
+                  icon: task.icon,
+                );
+              },
+            ),
           );
-        },
+        }
       ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => AddTaskPage(  dummyData: dummyData,)));
+          .push(MaterialPageRoute(builder: (context) => AddTaskPage()));
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.purpleAccent,
