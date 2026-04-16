@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui_class/data/dummy_data.dart';
-import 'package:flutter_ui_class/models/card_data_model.dart';
 import 'package:flutter_ui_class/providers/task_management_provider.dart';
 import 'package:flutter_ui_class/screens/add_task_page.dart';
 import 'package:flutter_ui_class/widgets/task_card_widget.dart';
@@ -14,16 +12,9 @@ class UiPage extends StatefulWidget {
 }
 
 class _UiPageState extends State<UiPage> {
-
-
-  
-  DummyData dummyDataInstance = DummyData();
-
-
   @override
   Widget build(BuildContext context) {
     print("Building UI Page...");
-    
 
     return Scaffold(
       appBar: AppBar(
@@ -34,15 +25,16 @@ class _UiPageState extends State<UiPage> {
       body: Consumer<TaskManagementProvider>(
         builder: (context, taskProvider, _) {
           return RefreshIndicator(
-              onRefresh: () async {
-                setState(() {});
-              },
+            onRefresh: () async {
+              setState(() {});
+            },
             child: ListView.builder(
               padding: EdgeInsets.all(16),
               itemCount: taskProvider.tasks.length,
               itemBuilder: (context, index) {
                 final task = taskProvider.tasks[index];
-            
+                print(task.toString());
+                print(task.runtimeType);
                 return TaskCardWidget(
                   title: task.title,
                   subtitle: task.subtitle,
@@ -51,16 +43,17 @@ class _UiPageState extends State<UiPage> {
               },
             ),
           );
-        }
+        },
       ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => AddTaskPage()));
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => AddTaskPage()));
         },
-        child: Icon(Icons.add),
         backgroundColor: Colors.purpleAccent,
+        child: Icon(Icons.add),
       ),
     );
   }

@@ -1,5 +1,6 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_ui_class/data/dummy_data.dart';
 import 'package:flutter_ui_class/models/card_data_model.dart';
 import 'package:flutter_ui_class/providers/task_management_provider.dart';
 import 'package:flutter_ui_class/utils/validators.dart';
@@ -38,6 +39,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     _phoneNumberController.clear();
     _passwordController.clear();
     _descriptionController.clear();
+    super.dispose();
   }
 
   @override
@@ -104,10 +106,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   "Assigned to: ${_assignedToController.text} \nPhone: ${_phoneNumberController.text} \nDescription: ${_descriptionController.text} \n \n The task Password is ${_passwordController.text}";
 
               taskProvider.addTaskExternal(
-                CardDataModel(
-                  title: _titleController.text,
-                  subtitle: taskDetails,
-                ),
+                id: taskProvider.tasks.length + 1,
+                title: _titleController.text,
+                subtitle: taskDetails,
+                createdAt: DateTime.now(),
+                icon:
+                    CardDataModel.availableIcons[Random().nextInt(
+                      CardDataModel.availableIcons.length,
+                    )],
               );
 
               Navigator.of(context).pop();
