@@ -5,21 +5,21 @@ import 'package:flutter_ui_class/screens/add_task_page.dart';
 import 'package:flutter_ui_class/widgets/task_card_widget.dart';
 import 'package:provider/provider.dart';
 
-class UiPage extends StatefulWidget {
-  const UiPage({super.key});
+class TasksHomeScreen extends StatefulWidget {
+  const TasksHomeScreen({super.key});
 
   @override
-  State<UiPage> createState() => _UiPageState();
+  State<TasksHomeScreen> createState() => _TasksHomeScreenState();
 }
 
-class _UiPageState extends State<UiPage> {
+class _TasksHomeScreenState extends State<TasksHomeScreen> {
   @override
   Widget build(BuildContext context) {
-    print("Building UI Page...");
+    print("Building Tasks Home Page...");
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("UI PAGE"),
+        title: Text("Tasks Home"),
         backgroundColor: Colors.purpleAccent,
       ),
 
@@ -73,24 +73,67 @@ class _UiPageState extends State<UiPage> {
           return StreamBuilder<List<Task>>(
             stream: taskProvider.tasksStream,
             builder: (context, snapshot) {
-              if (snapshot.hasError) return Text("Error: ${snapshot.error}");
+              if (snapshot.hasError) {
+                return Center(child: Text("Error: ${snapshot.error}"));
+              }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator());
               }
 
               final liveTasks = snapshot.data ?? [];
 
-              return ListView.builder(
-                padding: EdgeInsets.all(16),
-                itemCount: liveTasks.length,
-                itemBuilder: (context, index) {
-                  final task = liveTasks[index];
-                  return TaskCardWidget(
-                    task: task,
-                    onTap: () => handleTap(task),
-                  );
-                },
+              return Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Column(
+                  spacing: 10,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 190,
+                      width: 350,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade400,
+                            blurRadius: 5,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 10,
+                        children: [
+                          Icon(Icons.task),
+                          Text(
+                            "Tasks Counter: ${liveTasks.length}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        padding: EdgeInsets.all(16),
+                        itemCount: liveTasks.length,
+                        itemBuilder: (context, index) {
+                          final task = liveTasks[index];
+                          return TaskCardWidget(
+                            task: task,
+                            onTap: () => handleTap(task),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
           );
