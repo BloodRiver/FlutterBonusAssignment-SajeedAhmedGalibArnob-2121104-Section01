@@ -51,90 +51,94 @@ class _AddTaskPageState extends State<AddTaskPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              CoreInputField(
-                controller: _titleController,
-                keyboardType: TextInputType.text,
-                maxLines: 1,
-                labelText: "Task Title",
-                validator: CustomValidators.validateTaskTitle,
-              ),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                CoreInputField(
+                  controller: _titleController,
+                  keyboardType: TextInputType.text,
+                  maxLines: 1,
+                  labelText: "Task Title",
+                  validator: CustomValidators.validateTaskTitle,
+                ),
 
-              const SizedBox(height: 20),
-              CoreInputField(
-                controller: _assignedToController,
-                keyboardType: TextInputType.text,
-                maxLines: 1,
-                labelText: "Assigned To",
-                validator: CustomValidators.validateAssignedTo,
-              ),
+                const SizedBox(height: 20),
+                CoreInputField(
+                  controller: _assignedToController,
+                  keyboardType: TextInputType.text,
+                  maxLines: 1,
+                  labelText: "Assigned To",
+                  validator: CustomValidators.validateAssignedTo,
+                ),
 
-              const SizedBox(height: 20),
-              CoreInputField(
-                controller: _phoneNumberController,
-                keyboardType: TextInputType.phone,
-                maxLines: 1,
-                labelText: "Phone Number",
-                validator: CustomValidators.validatePhoneNumber,
-              ),
+                const SizedBox(height: 20),
+                CoreInputField(
+                  controller: _phoneNumberController,
+                  keyboardType: TextInputType.phone,
+                  maxLines: 1,
+                  labelText: "Phone Number",
+                  validator: CustomValidators.validatePhoneNumber,
+                ),
 
-              const SizedBox(height: 20),
-              PasswordInputFiled(controller: _passwordController),
+                const SizedBox(height: 20),
+                PasswordInputFiled(controller: _passwordController),
 
-              const SizedBox(height: 40),
-              CoreInputField(
-                controller: _descriptionController,
-                keyboardType: TextInputType.multiline,
-                maxLines: 6,
-                labelText: "Task Description",
-                validator: CustomValidators.validateDescription,
-              ),
-            ],
+                const SizedBox(height: 40),
+                CoreInputField(
+                  controller: _descriptionController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 6,
+                  labelText: "Task Description",
+                  validator: CustomValidators.validateDescription,
+                ),
+              ],
+            ),
           ),
         ),
       ),
 
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-        child: ElevatedButton(
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              final String taskDetails =
-                  "Assigned to: ${_assignedToController.text} \nPhone: ${_phoneNumberController.text} \nDescription: ${_descriptionController.text} \n \n The task Password is ${_passwordController.text}";
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+          child: ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                final String taskDetails =
+                    "Assigned to: ${_assignedToController.text} \nPhone: ${_phoneNumberController.text} \nDescription: ${_descriptionController.text} \n \n The task Password is ${_passwordController.text}";
 
-              taskProvider.addTaskExternal(
-                title: _titleController.text,
-                subtitle: taskDetails,
-                createdAt: DateTime.now(),
-                icon:
-                    Task.availableIcons[Random().nextInt(
-                      Task.availableIcons.length,
-                    )],
-              );
+                taskProvider.addTaskExternal(
+                  title: _titleController.text,
+                  subtitle: taskDetails,
+                  createdAt: DateTime.now(),
+                  icon:
+                      Task.availableIcons[Random().nextInt(
+                        Task.availableIcons.length,
+                      )],
+                );
 
-              Navigator.of(context).pop();
+                Navigator.of(context).pop();
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    "Task added successfully!,",
-                    style: TextStyle(color: Colors.white),
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Task added successfully!,",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: Colors.green,
                   ),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.purpleAccent,
-            foregroundColor: Colors.white,
-            padding: EdgeInsets.symmetric(vertical: 16),
-            textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.purpleAccent,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(vertical: 16),
+              textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            child: Text("Add Task"),
           ),
-          child: Text("Add Task"),
         ),
       ),
     );
