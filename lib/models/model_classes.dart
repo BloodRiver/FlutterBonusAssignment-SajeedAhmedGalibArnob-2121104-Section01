@@ -1,12 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui_class/models/card_data_model.dart';
 
 class Task {
+  static final List<IconData> availableIcons = [
+    Icons.abc_rounded,
+    Icons.account_balance,
+    Icons.add,
+    Icons.access_alarm,
+    Icons.ac_unit,
+  ];
+
   String? id;
   String title;
   String description;
-  DateTime? createdAt;
+  DateTime? createdAt = DateTime.now();
   IconData? icon;
 
   Task({
@@ -22,7 +29,7 @@ class Task {
 
     if (json.containsKey('icon')) {
       if (json['icon'] != -1) {
-        icon = CardDataModel.availableIcons[json['icon']];
+        icon = availableIcons[json['icon']];
       }
     }
 
@@ -39,9 +46,8 @@ class Task {
   Map<String, dynamic> toMap() => {
     "title": title,
     "description": description,
-    "createdAt":
-        createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
-    "icon": (icon == null) ? -1 : CardDataModel.availableIcons.indexOf(icon!),
+    "createdAt": createdAt?.toIso8601String(),
+    "icon": (icon == null) ? -1 : availableIcons.indexOf(icon!),
   };
 
   @override
@@ -81,5 +87,17 @@ class TaskRepository {
       print("Error fetching tasks $e");
       return [];
     }
+  }
+
+  Stream<List<Task>> getTasksStream() {
+    return _db.collection(collectionName).snapshots().map((
+      QuerySnapshot snapshot,
+    ) {
+      return snapshot.docs.map((DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+
+        return Task.fromMap(data, doc.id);
+      }).toList();
+    });
   }
 }
